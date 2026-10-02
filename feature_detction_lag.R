@@ -1,14 +1,14 @@
 
-# Feature Engineering: Detection Lag Analysis
+ Feature Engineering: Detection Lag Analysis
 
 library(DBI)
 library(RSQLite)
 
-# 1. Connect to SQLite database
+ 1. Connect to SQLite database
 setwd("C:/Users/pc/OneDrive/Documents")
 con <- DBI::dbConnect(RSQLite::SQLite(), "cyber_risk_database.db")
 
-# 2. Query to calculate average detection lag per company and flatten the table
+ 2. Query to calculate average detection lag per company and flatten the table
 lag_query <- "
 SELECT 
     c.company_id,
@@ -24,11 +24,11 @@ ORDER BY avg_detection_lag_days DESC;
 
 detection_lag_df <- DBI::dbGetQuery(con, lag_query)
 
-# 3. Print the top 10 companies with the highest average detection lag
+ 3. Print the top 10 companies with the highest average detection lag
 print("==========================================")
 print("   COMPANY DETECTION LAG FEATURE TABLE    ")
 print("==========================================")
 print(head(detection_lag_df, 10))
 
-# 4. Clean disconnect
+ 4. Clean disconnect
 DBI::dbDisconnect(con)
