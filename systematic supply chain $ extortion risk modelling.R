@@ -1,6 +1,6 @@
-# ==========================================
-# Integrated Enterprise Model: Monte Carlo + Systemic Shock
-# ==========================================
+
+ Integrated Enterprise Model: Monte Carlo + Systemic Shock
+
 
 n_sims <- 10000
 integrated_aggregate_losses <- numeric(n_sims)
@@ -86,24 +86,22 @@ annual_aggregate_losses <- rgamma(10000, shape = 2, rate = 0.00001)
 
 
 
+ Module 6 (Bonus): Systemic Supply Chain & Extortion Risk
 
-# ==========================================
-# Module 6 (Bonus): Systemic Supply Chain & Extortion Risk
-# ==========================================
 
-# 1. Simulate a Systemic Cloud Outage Shock Event
-# Actuarial concept: Unlike physical property (where a hurricane hits one region), 
-# cyber risk has systemic accumulation because companies share the same cloud infrastructure.
+ 1. Simulate a Systemic Cloud Outage Shock Event
+ Actuarial concept: Unlike physical property (where a hurricane hits one region), 
+ cyber risk has systemic accumulation because companies share the same cloud infrastructure.
 
 simulate_systemic_shock <- function(portfolio_losses, shock_probability = 0.05, impact_multiplier = 2.5) {
   
   n_sims <- length(portfolio_losses)
   systemic_losses <- portfolio_losses
   
-  # Identify which simulation years suffer a systemic supply chain event (e.g., 5% chance per year)
+  Identify which simulation years suffer a systemic supply chain event (e.g., 5% chance per year)
   is_systemic_year <- runif(n_sims) < shock_probability
   
-  # For systemic years, amplify aggregate losses due to correlated multi-client claims
+   For systemic years, amplify aggregate losses due to correlated multi-client claims
   systemic_losses[is_systemic_year] <- systemic_losses[is_systemic_year] * impact_multiplier
   
   return(list(
@@ -112,10 +110,10 @@ simulate_systemic_shock <- function(portfolio_losses, shock_probability = 0.05, 
   ))
 }
 
-# 2. Run the Systemic Shock Analysis
+ 2. Run the Systemic Shock Analysis
 shock_result <- simulate_systemic_shock(annual_aggregate_losses)
 
-# Recalculate Tail Risk under Systemic Threat
+ Recalculate Tail Risk under Systemic Threat
 new_var_99 <- quantile(shock_result$losses, 0.99)
 new_tvar_99 <- mean(shock_result$losses[shock_result$losses >= new_var_99])
 
