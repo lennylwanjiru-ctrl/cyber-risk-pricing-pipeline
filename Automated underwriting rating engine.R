@@ -1,12 +1,12 @@
-# ==========================================
-# Module 5: Automated Underwriting Rating Engine
-# ==========================================
 
-# 1. Define the Production Underwriting Function
+ Module 5: Automated Underwriting Rating Engine
+
+
+ 1. Define the Production Underwriting Function
 generate_cyber_quote <- function(sector, mfa_status, detection_lag_days) {
   
-  # Step A: Base intercept and coefficients from your winning Gamma GLM
-  # (Extracted directly from your earlier model outputs)
+   Step A: Base intercept and coefficients from your winning Gamma GLM
+ (Extracted directly from your earlier model outputs)
   base_severity <- 106914.77  # Intercept
   
   # Sector multipliers (relativities)
@@ -19,14 +19,14 @@ generate_cyber_quote <- function(sector, mfa_status, detection_lag_days) {
     "Technology"                  = 1.0389
   )
   
-  # Fallback if sector is unknown
+   Fallback if sector is unknown
   sec_multiplier <- if (sector %in% names(sector_factors)) sector_factors[sector] else 1.00
   
-  # Step B: Calculate Technical Base Premium (Gamma GLM prediction)
-  # Severity * Sector Relativities
+   Step B: Calculate Technical Base Premium (Gamma GLM prediction)
+   Severity * Sector Relativities
   technical_base_loss <- base_severity * sec_multiplier
   
-  # Step C: Apply Module 3 Security Credit Modifier
+   Step C: Apply Module 3 Security Credit Modifier
   security_modifier <- 1.0
   if (mfa_status == 1) {
     security_modifier <- security_modifier - 0.15 # 15% Discount
@@ -40,12 +40,12 @@ generate_cyber_quote <- function(sector, mfa_status, detection_lag_days) {
   }
   security_modifier <- max(0.70, min(1.50, security_modifier)) # Bound limits
   
-  # Step D: Final Commercial Premium Quote 
-  # (Assuming standard 10% expected loss ratio / loading factor)
+   Step D: Final Commercial Premium Quote 
+   (Assuming standard 10% expected loss ratio / loading factor)
   pure_premium <- technical_base_loss * 0.10
   final_quote <- pure_premium * security_modifier
   
-  # Step E: Return structured underwriting decision
+   Step E: Return structured underwriting decision
   cat("==========================================\n")
   cat("   CYBER INSURANCE UNDERWRITING QUOTE     \n")
   cat("==========================================\n")
