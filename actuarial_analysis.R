@@ -1,16 +1,14 @@
-# ==========================================
-# Actuarial Cyber Risk Analysis Script
-# ==========================================
 
-# 1. Set working directory
+ 1. Set working directory
 setwd("C:/Users/pc/OneDrive/Documents")
 
-# 2. Connect to the SQLite database
+ 2. Connect to the SQLite database
 con <- DBI::dbConnect(RSQLite::SQLite(), "cyber_risk_database.db")
 
-# ==========================================
-# PART 1: MFA Risk Mitigation Impact Query
-# ==========================================
+
+
+ PART 1: MFA Risk Mitigation Impact Query
+
 mfa_query <- "
 SELECT 
     CASE WHEN c.mfa_enabled = 1 THEN 'MFA Enabled' ELSE 'MFA Disabled' END AS mfa_status,
@@ -30,9 +28,9 @@ print("==========================================")
 print(mfa_results)
 cat("\n\n")
 
-# ==========================================
-# PART 2: Industry Sector Loss Rankings Query
-# ==========================================
+
+ PART 2: Industry Sector Loss Rankings Query
+
 sector_query <- "
 SELECT 
     c.industry_sector,
@@ -52,5 +50,5 @@ print("   INDUSTRY SECTOR LOSS RANKINGS          ")
 print("==========================================")
 print(sector_results)
 
-# 3. Clean disconnect from database
+ 3. Clean disconnect from database
 DBI::dbDisconnect(con)
