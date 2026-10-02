@@ -278,18 +278,18 @@ Why we carried out this step: In actuarial ratemaking, presenting raw statistica
 #### 1. Loss Analysis & Relativities by Economic Sector
 This section breaks down the severity of cyber breach metrics across distinct business environments alongside calculated risk pricing relativities.
 ![Cyber Loss by Industry Sector](cyber loss by industry sector.png)
-![Industry Risk Relativities](cyberlossbyindustrysector.png)
+![Industry Risk Relativities](cyber loss by industry sector.png)
 
 #### 2. Risk Mitigation Impact (MFA Attributes Evaluation)
 These charts isolate the direct actuarial premium impact and claim variations between baseline profiles and risk-mitigated entities utilizing Multi-Factor Authentication.
-![Cyber Loss by MFA Status](cyber loss by mfa status.png)
-![Cyber Loss by MFA Status 2](cyberlossbyMFAstatus.png)
+![Cyber Loss by MFA Status](cyber loss by MFA status.png)
+![Cyber Loss by MFA Status 2](cyber loss by MFA status.png)
 
 #### 3. Solvency & Aggregate Tail Risk Profile
 
 ![Portfolio Aggregate Annual Loss](portfolioaggregateannualloss.png)
 ### 4. industry risk relatives 
-![industry risk relative analysis](industryriskrelatives.png)
+![industry risk relative analysis](industry risk relatives.png)
 
  How to Run the Pipeline
 1 Clone this repository locally.
