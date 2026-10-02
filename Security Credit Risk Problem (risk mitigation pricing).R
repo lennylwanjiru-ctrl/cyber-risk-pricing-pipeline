@@ -1,16 +1,16 @@
-# ==========================================
-# Module 3: Security Credit & Risk Mitigation Engine
-# ==========================================
 
-# 1. Define the Security Credit Function
+ Module 3: Security Credit & Risk Mitigation Engine
+
+
+ 1. Define the Security Credit Function
 calculate_security_credit <- function(mfa_enabled, avg_detection_lag_days) {
   
-  # Base security modifier starts at 1.0 (Neutral)
+   Base security modifier starts at 1.0 (Neutral)
   security_modifier <- 1.0
   
-  # Rule 1: MFA Discount
-  # Actuarial justification: MFA heavily reduces breach frequency. 
-  # Give a 15% premium credit (discount) if enabled.
+   Rule 1: MFA Discount
+   Actuarial justification: MFA heavily reduces breach frequency. 
+   Give a 15% premium credit (discount) if enabled.
   if (mfa_enabled == 1) {
     security_modifier <- security_modifier - 0.15 
   } else {
@@ -18,24 +18,22 @@ calculate_security_credit <- function(mfa_enabled, avg_detection_lag_days) {
     security_modifier <- security_modifier + 0.10 
   }
   
-  # Rule 2: Detection Lag Penalty
-  # Actuarial justification: The longer a hacker is in the network, the worse it gets.
-  # If detection takes longer than 14 days, add a 5% surcharge per additional week.
+   Rule 2: Detection Lag Penalty
+   Actuarial justification: The longer a hacker is in the network, the worse it gets.
+   If detection takes longer than 14 days, add a 5% surcharge per additional week.
   if (avg_detection_lag_days > 14) {
     extra_weeks <- floor((avg_detection_lag_days - 14) / 7)
     security_modifier <- security_modifier + (0.05 * extra_weeks)
   }
   
-  # Cap the maximum credit at 0.70 (30% max discount) 
-  # and max surcharge at 1.50 (50% max penalty)
+   Cap the maximum credit at 0.70 (30% max discount) 
+   and max surcharge at 1.50 (50% max penalty)
   security_modifier <- max(0.70, min(1.50, security_modifier))
   
   return(security_modifier)
 }
 
-# ==========================================
-# 2. Test the Underwriting Engine on 3 Scenarios
-# ==========================================
+ 2. Test the Underwriting Engine on 3 Scenarios
 
 cat("==========================================\n")
 cat("   SECURITY CREDIT PRICING MODIFIERS      \n")
@@ -65,11 +63,11 @@ cat(sprintf("Scenario C (MFA=Yes, Lag=21 days):  %.2f multiplier (%.0f%% Discoun
 
 
 
-# ==========================================
-# Module 3 (Completion): Portfolio-Wide Security Credit Rating
-# ==========================================
 
-# 1. Ensure our security credit function is loaded (from earlier)
+ Module 3 (Completion): Portfolio-Wide Security Credit Rating
+
+
+ 1. Ensure our security credit function is loaded (from earlier)
 calculate_security_credit <- function(mfa_enabled, avg_detection_lag_days) {
   security_modifier <- 1.0
   if (mfa_enabled == 1) {
@@ -84,19 +82,19 @@ calculate_security_credit <- function(mfa_enabled, avg_detection_lag_days) {
   return(max(0.70, min(1.50, security_modifier)))
 }
 
-# 2. Apply the security credit modifier to every company in modeling_df
+ 2. Apply the security credit modifier to every company in modeling_df
 modeling_df$security_modifier <- mapply(
   calculate_security_credit, 
   mfa_enabled = modeling_df$mfa_enabled, 
   avg_detection_lag_days = modeling_df$avg_detection_lag
 )
 
-# 3. Calculate Final Adjusted Premium 
-# (Using total loss / expected loss as a baseline proxy for pure premium, then multiplying by the modifier)
+ 3. Calculate Final Adjusted Premium 
+ (Using total loss / expected loss as a baseline proxy for pure premium, then multiplying by the modifier)
 modeling_df$base_pure_premium <- modeling_df$total_loss * 0.10 # 10% expected loss ratio baseline
 modeling_df$final_charged_premium <- modeling_df$base_pure_premium * modeling_df$security_modifier
 
-# 4. View a summary of how the portfolio was priced
+ 4. View a summary of how the portfolio was priced
 cat("==========================================")
 cat("\n   PORTFOLIO SECURITY RATING SUMMARY      \n")
 cat("==========================================\n")
