@@ -285,7 +285,7 @@ These charts isolate the direct actuarial premium impact and claim variations be
 ![Cyber Loss by MFA Status](cyberlossbyMFAstatus.png)
 
 #### 3. Solvency & Aggregate Tail Risk Profile
-Our 10,000-year stochastic curve plotting annual loss frequencies against portfolio exposure boundaries.
+
 ![Portfolio Aggregate Annual Loss](portfolioaggregateannualloss.png))
 ### 4. industry risk relatives
 ![Industry Risk Relativities](industryskrelatives.png)
