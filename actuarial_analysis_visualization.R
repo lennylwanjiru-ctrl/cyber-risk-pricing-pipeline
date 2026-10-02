@@ -5,19 +5,18 @@ install.packages("ggplot2")
 
 
 
-# ==========================================
-# Cyber Risk Portfolio Visualizations
-# ==========================================
+
+ Cyber Risk Portfolio Visualizations
 
 library(DBI)
 library(RSQLite)
 library(ggplot2)
 
-# 1. Connect to SQLite database
+ 1. Connect to SQLite database
 setwd("C:/Users/pc/OneDrive/Documents")
 con <- DBI::dbConnect(RSQLite::SQLite(), "cyber_risk_database.db")
 
-# 2. Extract data for Industry Sector Rankings
+ 2. Extract data for Industry Sector Rankings
 sector_query <- "
 SELECT 
     c.industry_sector,
@@ -31,7 +30,7 @@ ORDER BY total_aggregate_loss ASC;
 "
 sector_df <- DBI::dbGetQuery(con, sector_query)
 
-# 3. Extract data for MFA Impact
+ 3. Extract data for MFA Impact
 mfa_query <- "
 SELECT 
     CASE WHEN c.mfa_enabled = 1 THEN 'MFA Enabled' ELSE 'MFA Disabled' END AS mfa_status,
@@ -43,12 +42,12 @@ GROUP BY c.mfa_enabled;
 "
 mfa_df <- DBI::dbGetQuery(con, mfa_query)
 
-# Disconnect safely
+ Disconnect safely
 DBI::dbDisconnect(con)
 
-# ==========================================
-# 4. Plot 1: Industry Sector Loss Rankings
-# ==========================================
+
+ 4. Plot 1: Industry Sector Loss Rankings
+
 p1 <- ggplot(sector_df, aes(x = industry_sector, y = total_aggregate_loss / 1e6, fill = industry_sector)) +
   geom_bar(stat = "identity", show.legend = FALSE) +
   coord_flip() +
@@ -62,9 +61,9 @@ p1 <- ggplot(sector_df, aes(x = industry_sector, y = total_aggregate_loss / 1e6,
 
 print(p1)
 
-# ==========================================
-# 5. Plot 2: MFA Risk Mitigation Impact
-# ==========================================
+
+ 5. Plot 2: MFA Risk Mitigation Impact
+
 p2 <- ggplot(mfa_df, aes(x = mfa_status, y = total_aggregate_loss / 1e6, fill = mfa_status)) +
   geom_bar(stat = "identity", width = 0.5, show.legend = FALSE) +
   labs(
@@ -83,18 +82,18 @@ print(p2)
 
 
 
-# ==========================================
-# Actuarial Cyber Risk Hypothesis Testing
-# ==========================================
+
+ Actuarial Cyber Risk Hypothesis Testing
+
 
 library(DBI)
 library(RSQLite)
 
-# 1. Connect to SQLite database
+ 1. Connect to SQLite database
 setwd("C:/Users/pc/OneDrive/Documents")
 con <- DBI::dbConnect(RSQLite::SQLite(), "cyber_risk_database.db")
 
-# 2. Pull individual loss data with MFA status
+ 2. Pull individual loss data with MFA status
 query <- "
 SELECT 
     c.mfa_enabled,
@@ -107,24 +106,24 @@ JOIN financial_losses f ON b.incident_id = f.incident_id;
 df <- DBI::dbGetQuery(con, query)
 DBI::dbDisconnect(con)
 
-# Separate data into groups
+ Separate data into groups
 mfa_yes <- df$total_loss[df$mfa_enabled == 1]
 mfa_no  <- df$total_loss[df$mfa_enabled == 0]
 
-# ==========================================
-# TEST 1: Two-Sample t-Test on Log-Transformed Losses
-# (Since cyber losses are heavy-tailed log-normal, log-transforming normalizes them)
-# ==========================================
+
+ TEST 1: Two-Sample t-Test on Log-Transformed Losses
+ (Since cyber losses are heavy-tailed log-normal, log-transforming normalizes them)
+
 cat("==========================================")
 cat("\nTEST 1: Welch's t-Test (Log-Transformed Losses)\n")
 cat("==========================================\n")
 t_test_result <- t.test(log(mfa_yes), log(mfa_no))
 print(t_test_result)
 
-# ==========================================
-# TEST 2: Wilcoxon Mann-Whitney Non-Parametric Test
-# (Robust test that doesn't assume normal distribution)
-# ==========================================
+
+ TEST 2: Wilcoxon Mann-Whitney Non-Parametric Test
+ (Robust test that doesn't assume normal distribution)
+
 cat("\n==========================================")
 cat("\nTEST 2: Wilcoxon Rank-Sum Test (Raw Losses)\n")
 cat("==========================================\n")
