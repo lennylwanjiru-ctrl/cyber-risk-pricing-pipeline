@@ -269,24 +269,28 @@ Why we carried out this step: In actuarial ratemaking, presenting raw statistica
  **Use Visual Rating Schedules in Commercial Tariffs**: Insurance providers should integrate visual relativity charts into their policyholder proposal documents to clearly demonstrate how sector risk characteristics drive premium calculations.
  **Align Public Sector Subsidies with Empirical Rankings**: Development finance institutions and government regulatory bodies should utilize visual risk ranking tools to identify which sectors require targeted public safety investments or subsidized insurance protections.
 
-
-
- 
-
-###  Portfolio Risk Visualizations
+### Portfolio Risk Visualizations
 
 #### 1. Loss Analysis & Relativities by Economic Sector
 This section breaks down the severity of cyber breach metrics across distinct business environments alongside calculated risk pricing relativities.
-![Cyber Loss by Industry Sector](cyber loss by industry sector.png)
-![Industry Risk Relativities](industry risk relatives.png)
+![Cyber Loss by Industry Sector](### Portfolio Risk Visualizations
+
+#### 1. Loss Analysis & Relativities by Economic Sector
+This section breaks down the severity of cyber breach metrics across distinct business environments alongside calculated risk pricing relativities.
+![Cyber Loss by Industry Sector](cyberlossbyindustrysector.png)
+
 
 #### 2. Risk Mitigation Impact (MFA Attributes Evaluation)
 These charts isolate the direct actuarial premium impact and claim variations between baseline profiles and risk-mitigated entities utilizing Multi-Factor Authentication.
-![Cyber Loss by MFA Status](cyber loss by MFA status.png)
+![Cyber Loss by MFA Status](cyberlossbyMFAstatus.png)
 
 #### 3. Solvency & Aggregate Tail Risk Profile
 Our 10,000-year stochastic curve plotting annual loss frequencies against portfolio exposure boundaries.
-![Portfolio Aggregate Annual Loss](portfolio aggregate annual loss.png)
+![Portfolio Aggregate Annual Loss](portfolioaggregateannualloss.png))
+### 4. industry risk relatives
+![Industry Risk Relativities](industryskrelatives.png)
+
+
  How to Run the Pipeline
 1 Clone this repository locally.
 2 Ensure `DBI`, `RSQLite`, `tidyverse`, and your modeling packages are installed.
