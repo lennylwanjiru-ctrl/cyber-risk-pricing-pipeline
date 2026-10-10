@@ -11,6 +11,31 @@ This repository implements a modular, end-to-end quantitative pipeline in **R** 
 *   **Commercial Underwriters:** Generates data-driven rating structures and risk-adjusted pricing engines based on security control metrics.
 *   **Multilateral Development Financial Institutions (e.g., World Bank Group, IFC):** Provides macroeconomic stress-testing frameworks to quantify systemic digital infrastructure vulnerabilities.
 *   **National Regulators & Statutory Bodies (e.g., IRA, KNBS):** Delivers empirical Tail Value at Risk (TVaR) capital adequacy models to prevent cascading institutional insolvency.
+ 
+
+##  Pipeline Architecture & Execution Roadmap of the R scripts
+
+1.  **`database_setup.R`** *(Data Ingestion)*  
+    Initializes the local SQLite database schema and pipelines the raw CSV corporate indicators into memory tables.
+2.  **`feature_detection_lag.R`** *(Feature Engineering)*  
+    Engineers and extracts the crucial enterprise "dwell time" (detection lag) metrics.
+3.  **`actuarial_analysis.R`** *(Data Aggregation)*  
+    Runs SQL relational database joins to aggregate portfolio loss variations by control groups and industrial sectors.
+4.  **`actuarial_analysis_visualization.R`** *(Statistical Inference)*  
+    Generates exploratory portfolio ggplot2 visual graphs and runs parametric/non-parametric hypothesis validation tests.
+5.  **`predictive_modelling_problem.R`** *(Parametric Modeling)*  
+    The heavy statistical core that splits data cohorts and fits Gaussian vs. optimized Actuarial Gamma GLMs to derive rating coefficients.
+6.  **`automated_underwriting_rating_engine.R`** *(Tariff Engine)*  
+    Operationalizes the winning Gamma model parameters into a functional underwriting tariff engine.
+7.  **`Security Credit Risk Problem (risk mitigation pricing).R`** *(Operational Credit Tuning)*  
+    Applies bounded underwriting rules to calculate risk-adjusted commercial credit discounts and dwell-time penalties.
+8.  **`Portfolio capital modelling $ (VaR $ TVaR).R`** *(Capital Adequacy)*  
+    Computes baseline regulatory solvency metrics (Value at Risk and Tail Value at Risk) to evaluate extreme portfolio exposures.
+9.  **`systematic supply chain $ extortion risk modelling.R`** *(Stochastic Simulation)*  
+    Executes a 10,000-year compound Monte Carlo simulation modeling catastrophic systemic cloud infrastructure outages and extortion accumulations.
+
+
+
 
 
 ##  Technical Architecture & Core Modules
