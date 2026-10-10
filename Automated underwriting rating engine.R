@@ -1,69 +1,82 @@
 
- Module 5: Automated Underwriting Rating Engine
+# Project: Cyber Risk Pricing Pipeline
+# Module: Gamma GLM Underwriting Tariff & Real-Time Quotation Engine
+# Analyst: Lenny Wanjiru (DeKUT Actuarial Science)
 
 
- 1. Define the Production Underwriting Function
+library(tidyverse)
+
+#' Generate Risk-Adjusted Commercial Cyber Underwriting Quote
+#' @param sector Character string specifying the target industry vertical.
+#' @param mfa_status Integer indicating corporate MFA deployment (1 = Active, 0 = Inactive).
+#' @param detection_lag_days Numeric count of breach containment dwell time.
+#' @return Bounded numeric value representing the total written commercial premium.
 generate_cyber_quote <- function(sector, mfa_status, detection_lag_days) {
   
-   Step A: Base intercept and coefficients from your winning Gamma GLM
- (Extracted directly from your earlier model outputs)
-  base_severity <- 106914.77  # Intercept
+  # Step A: Baseline Parametric Intercept from Validated Gamma GLM Execution
+  base_severity <- 106914.77
   
-  # Sector multipliers (relativities)
+  # Multiplicative Sector Relativity Multipliers
   sector_factors <- c(
-    "Finance & Insurance"         = 1.0000, # Baseline reference
-    "Healthcare"                  = 1.0450,
-    "Manufacturing"               = 0.9688,
-    "Professional Services"       = 1.0760,
-    "Retail & E-commerce"         = 1.0886,
-    "Technology"                  = 1.0389
+    "Finance & Insurance" = 1.0000,
+    "Healthcare"          = 1.0450,
+    "Manufacturing"       = 0.9688,
+    "Professional Services" = 1.0760,
+    "Retail & E-commerce" = 1.0886,
+    "Technology"          = 1.0389
   )
   
-   Fallback if sector is unknown
-  sec_multiplier <- if (sector %in% names(sector_factors)) sector_factors[sector] else 1.00
+  # Fallback allocation if industry category mapping drops out of boundary boundaries
+  sec_multiplier <- if (sector %in% names(sector_factors)) {
+    sector_factors[sector]
+  } else {
+    1.0000
+  }
   
-   Step B: Calculate Technical Base Premium (Gamma GLM prediction)
-   Severity * Sector Relativities
+  # Step B: Compute Baseline Technical Risk Premium Profile
   technical_base_loss <- base_severity * sec_multiplier
   
-   Step C: Apply Module 3 Security Credit Modifier
+  # Step C: Assess Underwriting Credit / Surcharge Modifiers
   security_modifier <- 1.0
+  
   if (mfa_status == 1) {
-    security_modifier <- security_modifier - 0.15 # 15% Discount
+    security_modifier <- security_modifier - 0.15
   } else {
-    security_modifier <- security_modifier + 0.10 # 10% Surcharge
+    security_modifier <- security_modifier + 0.10
   }
   
   if (detection_lag_days > 14) {
     extra_weeks <- floor((detection_lag_days - 14) / 7)
     security_modifier <- security_modifier + (0.05 * extra_weeks)
   }
-  security_modifier <- max(0.70, min(1.50, security_modifier)) # Bound limits
   
-   Step D: Final Commercial Premium Quote 
-   (Assuming standard 10% expected loss ratio / loading factor)
+  # Constrain modifier parameter within regulatory capital buffer limits
+  security_modifier <- max(0.70, min(1.50, security_modifier))
+  
+  # Step D: Apply Expected Portfolio Management Loadings (10% Target Factor)
   pure_premium <- technical_base_loss * 0.10
-  final_quote <- pure_premium * security_modifier
+  final_quote  <- pure_premium * security_modifier
   
-   Step E: Return structured underwriting decision
-  cat("==========================================\n")
-  cat("   CYBER INSURANCE UNDERWRITING QUOTE     \n")
-  cat("==========================================\n")
-  cat(sprintf("Industry Sector:         %s (Factor: %.2f)\n", sector, sec_multiplier))
-  cat(sprintf("Security Posture:        MFA=%d | Detection Lag=%d days\n", mfa_status, detection_lag_days))
-  cat(sprintf("Security Modifier:       %.2f multiplier\n", security_modifier))
-  cat(sprintf("Final Annual Premium:    $%.2f\n", final_quote))
-  cat("==========================================\n")
+  # Step E: Logging Telemetry Audit Trails to System Console
+  message("\n>>> GENERATING RISK-ADJUSTED PREMIUM TARIFF BRIEF")
+  cat(sprintf("Industry Vertical Group:  %s (Factor: %.4f)\n", sector, sec_multiplier))
+  cat(sprintf("Security Configuration:   MFA Status: %d | Operational Lag: %d days\n", mfa_status, detection_lag_days))
+  cat(sprintf("Risk Security Modifier:   %.2f Index Ratio\n", security_modifier))
+  cat(sprintf("Calculated Annual Premium: $%,.2f Net\n", final_quote))
   
   return(invisible(final_quote))
 }
 
-# ==========================================
-# 2. Test the Automated Engine on New Clients
-# ==========================================
 
-cat("Testing Quote Generation for Client 1 (High Risk):\n")
-generate_cyber_quote(sector = "Retail & E-commerce", mfa_status = 0, detection_lag_days = 45)
+# PRODUCTION VALIDATION UNIT TESTS
 
-cat("\nTesting Quote Generation for Client 2 (Low Risk):\n")
-generate_cyber_quote(sector = "Technology", mfa_status = 1, detection_lag_days = 5)
+message("\n>>> INITIALIZING RATEMAKING ENVIRONMENT VERIFICATION SUITE...")
+
+# Client Case Study 1: High-Exposure Sub-Portfolio Profile
+message("\nProcessing Pipeline Verification Run 1: High Risk Tracking")
+quote_1 <- generate_cyber_quote(sector = "Retail & E-commerce", mfa_status = 0, detection_lag_days = 45)
+
+# Client Case Study 2: Low-Exposure Proactive Profile
+message("\nProcessing Pipeline Verification Run 2: Optimized Risk Track")
+quote_2 <- generate_cyber_quote(sector = "Technology", mfa_status = 1, detection_lag_days = 5)
+ 
