@@ -17,9 +17,9 @@ if (!file.exists(db_path)) {
 
 con <- dbConnect(SQLite(), db_path)
 
-# ==============================================================================
+
 # EXPOSURE INGESTION & DATA FRAMING
-# ==============================================================================
+
 
 model_query <- "
 SELECT 
@@ -46,9 +46,9 @@ modeling_df <- df_raw %>%
     mfa_enabled     = as.factor(mfa_enabled)
   )
 
-# ==============================================================================
+
 # RATING STRUCTURE 1: GAUSSIAN GLM DEPLOYMENT
-# ==============================================================================
+
 
 cyber_glm <- glm(
   total_loss ~ industry_sector + mfa_enabled + avg_detection_lag,
@@ -64,9 +64,9 @@ risk_relativities <- exp(coef(cyber_glm))
 message("\n>>> GAUSSIAN EXPOSURE RISK RELATIVITIES")
 print(round(risk_relativities, 4))
 
-# ==============================================================================
+
 # MODEL DIAGNOSTICS & GOODNESS-OF-FIT BENCHMARKS
-# ==============================================================================
+
 message("\n>>> DEPLOYING VALIDATION MATRIX: DEVIANCE & AIC ASSESSMENTS")
 
 null_deviance <- cyber_glm$null.deviance
@@ -83,9 +83,9 @@ df_diff      <- cyber_glm$df.null - cyber_glm$df.residual
 p_value_main <- 1 - pchisq(chi_sq_stat, df = df_diff)
 cat(sprintf("Overall Model Chi-Sq p-value: %e\n", p_value_main))
 
-# ==============================================================================
+
 # CROSS-VALIDATION EVALUATION (80/20 TRAINING SPLIT)
-# ==============================================================================
+
 message("\n>>> INITIALIZING OUT-OF-SAMPLE CROSS-VALIDATION ENVIRONMENT...")
 
 set.seed(42)
@@ -114,9 +114,9 @@ cat(sprintf("Root Mean Squared Error (RMSE): $%,.2f\n", rmse_metric))
 cat(sprintf("Mean Absolute Error (MAE):       $%,.2f\n", mae_metric))
 cat(sprintf("Out-of-Sample R-Squared Index:   %.4f\n", r_squared))
 
-# ==============================================================================
+
 # RATING STRUCTURE 2: OPTIMIZED TRUE ACTUARIAL GAMMA GLM
-# ==============================================================================
+
 
 gamma_glm <- glm(
   total_loss ~ industry_sector + mfa_enabled + avg_detection_lag,
