@@ -1,64 +1,62 @@
- 1. Set working directory to the exact folder where your CSVs live
-setwd("C:/Users/pc/OneDrive/Desktop/project_data_used")
 
- 2. Connect to database
-con <- DBI::dbConnect(RSQLite::SQLite(), "cyber_risk_database.db")
+# Project: Cyber Risk Pricing Pipeline
+# Module: Relational Database Initialization & Data Ingestion Engine
+# Analyst: Lenny Wanjiru (DeKUT Actuarial Science)
 
- 3. Write/refresh the tables from your CSV files
-DBI::dbWriteTable(con, "insured_companies", read.csv("cyber_insured_companies.csv"), overwrite = TRUE)
-DBI::dbWriteTable(con, "breach_events", read.csv("cyber_breach_events.csv"), overwrite = TRUE)
-DBI::dbWriteTable(con, "financial_losses", read.csv("cyber_financial_losses.csv"), overwrite = TRUE)
 
-print("Tables successfully loaded into SQLite database!")
+library(DBI)
+library(RSQLite)
 
- 4. Run the SQL join query across all three tables
-sql_query <- "
+# 1. Database Connection Initialization
+# [Note: Hardcoded path setwd() removed to enforce cross-platform relative pathing]
+db_path <- "cyber_risk_database.db"
+con <- dbConnect(SQLite(), db_path)
+
+
+# DATA INGESTION & SCHEMATIC MAPPING (CSV to SQLite)
+
+message("\n>>> INITIALIZING DATA INGESTION SUITE...")
+
+# Ingest unstructured source exposures and cache into structured tables
+dbWriteTable(con, "insured_companies", read.csv("cyber_insured_companies.csv"), overwrite = TRUE)
+dbWriteTable(con, "breach_events",    read.csv("cyber_breach_events.csv"),    overwrite = TRUE)
+dbWriteTable(con, "financial_losses",  read.csv("cyber_financial_losses.csv"),  overwrite = TRUE)
+
+message("Tables successfully materialized within the relational database schema.")
+
+
+# QUANTITATIVE DATA PIPELINE EXECUTION
+
+
+# Core SQL Join Architecture matching company profiles to loss aggregates
+core_sql_query <- "
 SELECT 
     c.company_id,
     c.industry_sector,
-    b.incident_id,
     b.breach_type,
+    b.incident_id,
     (f.forensic_cleanup_cost + f.regulatory_fines + f.business_interruption_payout) AS total_financial_loss
 FROM insured_companies c
-JOIN breach_events b ON c.company_id = b.company_id
+JOIN breach_events b    ON c.company_id = b.company_id
 JOIN financial_losses f ON b.incident_id = f.incident_id
-LIMIT 10;
 "
 
-relational_results <- DBI::dbGetQuery(con, sql_query)
-print("SQL Join Query Results:")
+# 1. Execution Phase A: Bounded Telemetry Test Run
+message("\n>>> EXECUTING SUBSAMPLE LOG: INITIAL RATING CHECKS (LIMIT 10)")
+limited_query <- paste(core_sql_query, "LIMIT 10;")
+relational_results <- dbGetQuery(con, limited_query)
 print(relational_results)
 
- 5. Clean disconnect
-DBI::dbDisconnect(con)
-print("Pipeline execution complete and disconnected successfully.")
+# 2. Execution Phase B: Ingest Full Portfolio Matrix into Active Workspace Memory
+message("\n>>> INGESTING METRIC POOL FOR IN-MEMORY ACTUARIAL MODELING...")
+full_results <- dbGetQuery(con, core_sql_query)
 
 
+# DISCONNECT & DATA FRAME PRESERVATION
 
+# Safe termination of connection parameters now that observations are loaded
+dbDisconnect(con)
+message("\nDatabase connection closed successfully. Workflow complete.")
 
-
-
-
-
-
- Reconnect to your database
-con <- DBI::dbConnect(RSQLite::SQLite(), "cyber_risk_database.db")
-
-# Pull a larger sample or the full joined results
-full_results <- DBI::dbGetQuery(con, "
-  SELECT 
-      c.company_id,
-      c.industry_sector,
-      b.incident_id,
-      b.breach_type,
-      (f.forensic_cleanup_cost + f.regulatory_fines + f.business_interruption_payout) AS total_financial_loss
-  FROM insured_companies c
-  JOIN breach_events b ON c.company_id = b.company_id
-  JOIN financial_losses f ON b.incident_id = f.incident_id
-")
-
- This opens an interactive spreadsheet viewer window in your editor!
-View(full_results)
-
- Clean disconnect
-DBI::dbDisconnect(con)
+# Telemetry inspection confirmation printout
+cat(sprintf("Total Ingested Portfolio Exposure Records: %d\n", nrow(full_results)))
